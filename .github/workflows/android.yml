@@ -2,12 +2,7 @@ name: Zotero Android CI
 
 on:
   push:
-    # Pattern matched against refs/tags
-    tags:
-      - '**'  # Push events to every tag including hierarchical tags like v1.0/beta
-
-env:
-  ANDROID_PUBLISHER_CREDENTIALS: ${{secrets.ANDROID_PUBLISHER_CREDENTIALS}}
+    branches: [ "master" ]
 
 jobs:
   build:
@@ -33,12 +28,6 @@ jobs:
       - name: Writing PSPDFKIT's key into a file to be then picked up by gradle.
         run: echo ${{secrets.PSPDFKIT_KEY}} | sed 's/./& /g' > pspdfkit-key.txt
 
-      - name: Decrypt Keystore
-        run: openssl aes-256-cbc -d -in .github/keystore.cipher -k ${{secrets.SIGNING_KEY}} -md sha256 > zotero.release.keystore
-
-      - name: Decrypt Keystore secrets
-        run: openssl aes-256-cbc -d -in .github/keystore-secrets.cipher -k ${{secrets.SIGNING_KEY}} -md sha256 > keystore-secrets.txt
-
       - name: Grant execute permission for bundle_translators.py
         run: chmod +x scripts/bundle_translators.py
 
@@ -57,5 +46,12 @@ jobs:
       - name: Download Android dependencies
         run: ./gradlew androidDependencies --no-configuration-cache
 
-      - name: Deploy to Google Play Internal Test Track
-        run: ./gradlew --no-configuration-cache -PpreDexLibs=false publishInternalReleaseBundle --stacktrace
+      - name: Generate dev build
+        run: ./gradlew --no-configuration-cache -PpreDexLibs=false bundleDev --stacktrace
+        
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-build
+          path: |
+            app/build/outputs/bundle/devDebug
