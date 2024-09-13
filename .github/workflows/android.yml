@@ -1,5 +1,5 @@
 name: Zotero Android CI
-
+  
 on:
   push:
     branches: [ "master" ]
@@ -44,7 +44,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Download Android dependencies
-        run: ./gradlew androidDependencies --no-configuration-cache
+        run: ./gradlew androidDependencies --no-configuration-cache 
 
       - name: Generate dev build
         run: ./gradlew --no-configuration-cache -PpreDexLibs=false bundleDev --stacktrace
