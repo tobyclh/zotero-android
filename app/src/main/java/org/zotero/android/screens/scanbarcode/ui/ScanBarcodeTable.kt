@@ -28,7 +28,7 @@ import org.zotero.android.database.objects.Attachment
 import org.zotero.android.database.objects.ItemTypes
 import org.zotero.android.sync.SyncError
 import org.zotero.android.uicomponents.Strings
-import org.zotero.android.uicomponents.addbyidentifier.data.LookupRow
+import org.zotero.android.screens.addbyidentifier.data.LookupRow
 import org.zotero.android.uicomponents.attachmentprogress.FileAttachmentView
 import org.zotero.android.uicomponents.attachmentprogress.State
 import org.zotero.android.uicomponents.attachmentprogress.Style

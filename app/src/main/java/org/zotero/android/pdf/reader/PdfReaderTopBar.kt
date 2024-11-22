@@ -1,7 +1,10 @@
 package org.zotero.android.pdf.reader
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import org.zotero.android.architecture.ui.CustomLayoutSize
+import org.zotero.android.pdf.reader.pdfsearch.PdfReaderSearchPopup
 import org.zotero.android.uicomponents.Drawables
 import org.zotero.android.uicomponents.Strings
 import org.zotero.android.uicomponents.icon.IconWithPadding
@@ -15,10 +18,16 @@ internal fun PdfReaderTopBar(
     onBack: () -> Unit,
     onShowHideSideBar: () -> Unit,
     toPdfSettings: () -> Unit,
-    toggleToolbarButton:() -> Unit,
+    toPdfPlainReader: () -> Unit,
+    onShowHidePdfSearch: () -> Unit,
+    toggleToolbarButton: () -> Unit,
     isToolbarButtonSelected: Boolean,
     showSideBar: Boolean,
+    showPdfSearch: Boolean,
+    viewState: PdfReaderViewState,
+    viewModel: PdfReaderVMInterface
 ) {
+    val isTablet = CustomLayoutSize.calculateLayoutType().isTablet()
     NewCustomTopBar(
         backgroundColor = CustomTheme.colors.surface,
         leftContainerContent = listOf(
@@ -37,7 +46,10 @@ internal fun PdfReaderTopBar(
                     isSelected = showSideBar
 
                 )
-            }
+            },
+            {
+                IconWithPadding(drawableRes = Drawables.pdf_raw_reader, onClick = toPdfPlainReader)
+            },
         ), rightContainerContent = listOf(
             {
                 ToggleIconWithPadding(
@@ -47,8 +59,32 @@ internal fun PdfReaderTopBar(
                 )
             },
             {
+                if (isTablet) {
+                    Box {
+                        IconWithPadding(
+                            drawableRes = Drawables.search_24px,
+                            onClick = onShowHidePdfSearch
+                        )
+                        if (viewState.showPdfSearch) {
+                            PdfReaderSearchPopup(
+                                viewState = viewState,
+                                viewModel = viewModel,
+                            )
+                        }
+                    }
+                } else {
+                    ToggleIconWithPadding(
+                        drawableRes = Drawables.search_24px,
+                        onToggle = {
+                            onShowHidePdfSearch()
+                        },
+                        isSelected = showPdfSearch
+                    )
+                }
+            },
+            {
                 IconWithPadding(drawableRes = Drawables.settings_24px, onClick = toPdfSettings)
-            }
+            },
         )
     )
 }

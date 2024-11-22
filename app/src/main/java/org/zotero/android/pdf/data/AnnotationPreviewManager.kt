@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.Rect
 import androidx.core.graphics.scale
 import com.pspdfkit.annotations.Annotation
+import com.pspdfkit.annotations.FreeTextAnnotation
 import com.pspdfkit.annotations.InkAnnotation
 import com.pspdfkit.configuration.rendering.PageRenderConfiguration
 import com.pspdfkit.document.PdfDocument
@@ -26,7 +27,7 @@ import javax.inject.Singleton
 
 @Singleton
 class AnnotationPreviewManager @Inject constructor(
-    dispatchers: Dispatchers,
+    private val dispatchers: Dispatchers,
     private val fileStore: FileStore,
     private val memoryCache: AnnotationPreviewMemoryCache,
     private val context: Context,
@@ -42,7 +43,7 @@ class AnnotationPreviewManager @Inject constructor(
         isDark: Boolean,
         annotationMaxSideSize: Int,
     ) {
-        if (!annotation.shouldRenderPreview || !annotation.isZoteroAnnotation) {
+        if (!annotation.shouldRenderPreview || !annotation.isZoteroAnnotation || !annotation.isAttached) {
             return
         }
         enqueue(
@@ -114,7 +115,7 @@ class AnnotationPreviewManager @Inject constructor(
             maxSide = bitmapSize
         )
 
-        val shouldDrawAnnotation = annotation is InkAnnotation
+        val shouldDrawAnnotation = annotation is InkAnnotation || annotation is FreeTextAnnotation
         if (shouldDrawAnnotation) {
             drawAnnotationOnBitmap(resultBitmap, annotation)
         }
@@ -223,5 +224,6 @@ class AnnotationPreviewManager @Inject constructor(
     fun cancelProcessing() {
         currentlyProcessingAnnotations.clear()
         coroutineScope.cancel()
+        coroutineScope = CoroutineScope(dispatchers.default)
     }
 }

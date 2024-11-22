@@ -22,10 +22,10 @@ import org.zotero.android.screens.scanbarcode.ScanBarcodeViewModel.State
 import org.zotero.android.sync.LibraryIdentifier
 import org.zotero.android.sync.SchemaController
 import org.zotero.android.uicomponents.Strings
-import org.zotero.android.uicomponents.addbyidentifier.IdentifierLookupController
-import org.zotero.android.uicomponents.addbyidentifier.TranslatorLoadedEventStream
-import org.zotero.android.uicomponents.addbyidentifier.data.LookupRow
-import org.zotero.android.uicomponents.addbyidentifier.data.LookupRowItem
+import org.zotero.android.screens.addbyidentifier.IdentifierLookupController
+import org.zotero.android.screens.addbyidentifier.TranslatorLoadedEventStream
+import org.zotero.android.screens.addbyidentifier.data.LookupRow
+import org.zotero.android.screens.addbyidentifier.data.LookupRowItem
 import timber.log.Timber
 import java.util.LinkedList
 import javax.inject.Inject
